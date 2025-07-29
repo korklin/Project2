@@ -183,3 +183,73 @@ def test_adding_same_product_twice(
 
     assert category.products.count(product1) == 2
     assert len(category.products) == initial_count + 1
+
+
+def test_products_property_returns_copy(categories: Tuple[Category, Category]) -> None:
+    """
+    Проверяет, что при передаче валидных параметров создаётся экземпляр
+    класса Product с корректно установленными атрибутами.
+    """
+    category1, _ = categories
+    original_len = len(category1.products)
+    category1.products.append(Product("Test", "desc", 1.0, 1))  # изменит копию
+
+    # Приватный список останется без изменений
+    assert len(category1.products) == original_len
+
+
+def test_new_product_creation() -> None:
+    """
+    Проверяет, что метод new_product создаёт объект класса Product
+    с правильными значениями атрибутов: name, description, price и quantity.
+    """
+    product = Product.new_product(
+        name="Наушники",
+        description="Беспроводные, с шумоподавлением",
+        price=5990.0,
+        quantity=12
+    )
+
+    assert isinstance(product, Product)
+    assert product.name == "Наушники"
+    assert product.description == "Беспроводные, с шумоподавлением"
+    assert product.price == 5990.0
+    assert product.quantity == 12
+
+
+def test_price_getter() -> None:
+    """
+    Проверяет, что геттер price возвращает корректное значение.
+    """
+    product = Product("Кофеварка", "Капельная кофеварка", 4990.0, 5)
+    assert product.price == 4990.0
+
+
+def test_price_setter_valid_value(capsys) -> None:
+    """
+    Проверяет, что сеттер устанавливает новую корректную цену.
+    """
+    product = Product("Кофеварка", "Капельная кофеварка", 4990.0, 5)
+    product.price = 3990.0
+    assert product.price == 3990.0
+
+    captured = capsys.readouterr()
+    assert captured.out == ""  # Ничего не должно выводиться
+
+
+def test_price_setter_invalid_value_does_not_change_price(capsys) -> None:
+    """
+    Проверяет, что при попытке установить цену <= 0,
+    значение не меняется и выводится предупреждение.
+    """
+    product = Product("Кофеварка", "Капельная кофеварка", 4990.0, 5)
+    product.price = 0.0  # Некорректная цена
+
+    captured = capsys.readouterr()
+    assert "Цена не должна быть нулевая или отрицательная" in captured.out
+    assert product.price == 4990.0  # Значение не изменилось
+
+    product.price = -100  # Тоже некорректная цена
+    captured = capsys.readouterr()
+    assert "Цена не должна быть нулевая или отрицательная" in captured.out
+    assert product.price == 4990.0
