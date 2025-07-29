@@ -7,6 +7,10 @@ from src.class_made import Category, Product
 
 @pytest.fixture(autouse=True)
 def reset_counters() -> Iterator[None]:
+    """
+    Автоматически сбрасывает счётчики category_count и product_count
+    перед каждым тестом, чтобы обеспечить независимость тестов.
+    """
     Category.category_count = 0
     Category.product_count = 0
     yield
@@ -14,6 +18,9 @@ def reset_counters() -> Iterator[None]:
 
 @pytest.fixture
 def products() -> Tuple[Product, Product, Product, Product]:
+    """
+    Создаёт 4 тестовых продукта.
+    """
     product1 = Product(
         "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
     )
@@ -27,6 +34,9 @@ def products() -> Tuple[Product, Product, Product, Product]:
 def categories(
     products: Tuple[Product, Product, Product, Product],
 ) -> Tuple[Category, Category]:
+    """
+    Создаёт 2 категории с соответствующими продуктами.
+    """
     product1, product2, product3, product4 = products
     category1 = Category(
         "Смартфоны",
@@ -42,6 +52,9 @@ def categories(
 
 
 def test_product_fields(products: Tuple[Product, Product, Product, Product]) -> None:
+    """
+    Проверяет корректность сохранения полей объектов Product после инициализации.
+    """
     product1, product2, product3, _ = products
     assert product1.name == "Samsung Galaxy S23 Ultra"
     assert product1.description == "256GB, Серый цвет, 200MP камера"
@@ -60,6 +73,9 @@ def test_product_fields(products: Tuple[Product, Product, Product, Product]) -> 
 
 
 def test_category_initialization(categories: Tuple[Category, Category]) -> None:
+    """
+    Убеждается, что категории создаются с правильными полями и нужным количеством продуктов.
+    """
     category1, category2 = categories
 
     assert category1.name == "Смартфоны"
@@ -72,6 +88,10 @@ def test_category_initialization(categories: Tuple[Category, Category]) -> None:
 
 
 def test_counters(categories: Tuple[Category, Category]) -> None:
+    """
+    Проверяет корректную работу счётчиков Category.category_count и Category.product_count
+    после создания категорий с продуктами.
+    """
     # category_count должно быть 2 (две категории)
     assert Category.category_count == 2
     # product_count должно быть 4 (3 + 1 товара)
@@ -82,6 +102,10 @@ def test_category_products_objects(
     categories: Tuple[Category, Category],
     products: Tuple[Product, Product, Product, Product],
 ) -> None:
+    """
+    Удостоверяется, что все продукты в категориях являются экземплярами Product, и что это именно те объекты,
+    которые были переданы при создании.
+    """
     category1, category2 = categories
     product1, product2, product3, product4 = products
 
@@ -101,6 +125,9 @@ def test_category_products_objects(
 def test_add_product_to_category(
     products: Tuple[Product, Product, Product, Product],
 ) -> None:
+    """
+    Проверяет добавление нового продукта в уже существующую категорию, а также инкремент счётчика продуктов.
+    """
     product1, product2, *_ = products
     category: Category = Category("Гаджеты", "Описание", [product1])
     old_count: int = len(category.products)
@@ -114,6 +141,9 @@ def test_add_product_to_category(
 
 
 def test_category_init_with_non_list_raises() -> None:
+    """
+    Проверяет, что попытка создать категорию с аргументом products, не являющимся списком, вызывает исключение TypeError.
+    """
     with pytest.raises(
         TypeError, match="products должен быть списком объектов класса Product"
     ):
@@ -121,6 +151,9 @@ def test_category_init_with_non_list_raises() -> None:
 
 
 def test_category_and_product_counters_accumulate() -> None:
+    """
+    Тестирует корректность накопления значений счётчиков категорий и продуктов при множественном создании объектов.
+    """
     Category.category_count = 0
     Category.product_count = 0
 
@@ -138,6 +171,10 @@ def test_category_and_product_counters_accumulate() -> None:
 def test_adding_same_product_twice(
     products: Tuple[Product, Product, Product, Product],
 ) -> None:
+    """
+    Убеждается, что один и тот же продукт можно добавить в категорию несколько раз,
+    и он действительно будет продублирован в списке.
+    """
     product1, *_ = products
     category: Category = Category("Повторы", "desc", [product1])
     initial_count: int = len(category.products)
