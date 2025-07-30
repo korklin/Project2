@@ -1,6 +1,7 @@
-from typing import Iterator, Tuple
+from typing import Iterator, Tuple, Any
 
 import pytest
+from _pytest.capture import CaptureFixture
 
 from src.class_made import Category, Product
 
@@ -225,7 +226,7 @@ def test_price_getter() -> None:
     assert product.price == 4990.0
 
 
-def test_price_setter_valid_value(capsys) -> None:
+def test_price_setter_valid_value(capsys: CaptureFixture[str]) -> None:
     """
     Проверяет, что сеттер устанавливает новую корректную цену.
     """
@@ -237,7 +238,7 @@ def test_price_setter_valid_value(capsys) -> None:
     assert captured.out == ""  # Ничего не должно выводиться
 
 
-def test_price_setter_invalid_value_does_not_change_price(capsys) -> None:
+def test_price_setter_invalid_value_does_not_change_price(capsys: CaptureFixture[str]) -> None:
     """
     Проверяет, что при попытке установить цену <= 0,
     значение не меняется и выводится предупреждение.
@@ -253,3 +254,31 @@ def test_price_setter_invalid_value_does_not_change_price(capsys) -> None:
     captured = capsys.readouterr()
     assert "Цена не должна быть нулевая или отрицательная" in captured.out
     assert product.price == 4990.0
+
+
+def test_add_products(products: Tuple[Product, Product, Product, Product]) -> None:
+    p1, p2, *_ = products
+    assert p1 + p2 == (180000.0 * 5 + 210000.0 * 8)
+
+
+def test_add_invalid_type(products: Tuple[Product, Product, Product, Product]) -> None:
+    p1, *_ = products
+    not_a_product: Any = "не продукт"
+    with pytest.raises(TypeError):
+        _ = p1 + not_a_product
+
+
+def test_product_str(products: Tuple[Product, Product, Product, Product]) -> None:
+    p1, *_ = products
+    assert str(p1) == "Samsung Galaxy S23 Ultra (180000.0 руб., 5 шт)"
+
+
+def test_product_repr(products: Tuple[Product, Product, Product, Product]) -> None:
+    _, p2, *_ = products
+    assert repr(p2) == "Iphone 15 (210000.0 руб., 8 шт)"
+
+
+def test_category_str(categories: Tuple[Category, Category]) -> None:
+    category1, category2 = categories
+    assert str(category1) == "Смартфоны, количество продуктов: 27 шт)"
+    assert str(category2) == "Телевизоры, количество продуктов: 7 шт)"
