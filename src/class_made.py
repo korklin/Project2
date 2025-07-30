@@ -1,3 +1,6 @@
+from pycodestyle import continued_indentation
+
+
 class Product:
     name: str
     description: str
@@ -9,8 +12,23 @@ class Product:
     ) -> None:
         self.name = name
         self.description = description
-        self.price = price
+        self.__price = price
         self.quantity = quantity
+
+    @property
+    def price(self) -> float:
+        return self.__price
+
+    @price.setter
+    def price(self, value: float) -> None:
+       if value <= 0:
+           print("Цена не должна быть нулевая или отрицательная")
+       else:
+           self.__price = value
+
+    @classmethod
+    def new_product(cls, name: str, description: str, price: float, quantity: int) -> "Product":
+        return cls(name, description, price, quantity)
 
     def __str__(self) -> str:
         return f"{self.name} ({self.price} руб., {self.quantity} шт)"
@@ -30,14 +48,14 @@ class Category:
     def __init__(self, name: str, description: str, products: list) -> None:
         self.name = name
         self.description = description
-        self.products = []
+        self.__products = []
 
         if not isinstance(products, list):
             raise TypeError("products должен быть списком объектов класса Product")
 
         for product in products:
             if isinstance(product, Product):
-                self.products.append(product)
+                self.__products.append(product)
                 Category.product_count += 1
             else:
                 raise TypeError(
@@ -48,10 +66,18 @@ class Category:
 
     def add_product(self, product: Product) -> None:
         if isinstance(product, Product):
-            self.products.append(product)
+            self.__products.append(product)
             Category.product_count += 1
         else:
             raise TypeError("Можно добавлять только объекты класса Product.")
+
+
+    @property
+    def products(self) -> list[Product]:
+        """Возвращает копию списка товаров (только для чтения)."""
+        return self.__products.copy()
+
+
 
 
 if __name__ == "__main__":
