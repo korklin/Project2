@@ -1,4 +1,4 @@
-from typing import Tuple, Any
+from typing import Any, Tuple
 
 import pytest
 from _pytest.capture import CaptureFixture
@@ -12,7 +12,9 @@ def products() -> Tuple[Product, Product, Product, Product]:
     Создаёт 4 тестовых продукта.
     """
     return (
-        Product("Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5),
+        Product(
+            "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
+        ),
         Product("Iphone 15", "512GB, Gray space", 210000.0, 8),
         Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14),
         Product('55" QLED 4K', "Фоновая подсветка", 123000.0, 7),
@@ -28,6 +30,7 @@ def test_product_fields(products: Tuple[Product, Product, Product, Product]) -> 
     assert product2.description == "512GB, Gray space"
     assert product3.quantity == 14
 
+
 def test_new_product_creation() -> None:
     """
     Проверяет, что метод new_product создаёт объект класса Product
@@ -37,7 +40,7 @@ def test_new_product_creation() -> None:
         name="Наушники",
         description="Беспроводные, с шумоподавлением",
         price=5990.0,
-        quantity=12
+        quantity=12,
     )
 
     assert isinstance(product, Product)
@@ -67,7 +70,9 @@ def test_price_setter_valid_value(capsys: CaptureFixture[str]) -> None:
     assert captured.out == ""  # Ничего не должно выводиться
 
 
-def test_price_setter_invalid_value_does_not_change_price(capsys: CaptureFixture[str]) -> None:
+def test_price_setter_invalid_value_does_not_change_price(
+    capsys: CaptureFixture[str],
+) -> None:
     """
     Проверяет, что при попытке установить цену <= 0,
     значение не меняется и выводится предупреждение.
@@ -86,11 +91,19 @@ def test_price_setter_invalid_value_does_not_change_price(capsys: CaptureFixture
 
 
 def test_add_products(products: Tuple[Product, Product, Product, Product]) -> None:
+    """
+    Проверяет корректность работы оператора сложения (__add__) для объектов Product одного типа.
+    Сумма вычисляется как сумма total_price = price * quantity для каждого продукта.
+    """
     p1, p2, *_ = products
     assert p1 + p2 == (180000.0 * 5 + 210000.0 * 8)
 
 
 def test_add_invalid_type(products: Tuple[Product, Product, Product, Product]) -> None:
+    """
+    Проверяет, что при попытке сложить объект Product с объектом другого типа (не Product),
+    вызывается исключение TypeError.
+    """
     p1, *_ = products
     not_a_product: Any = "не продукт"
     with pytest.raises(TypeError):
@@ -98,10 +111,18 @@ def test_add_invalid_type(products: Tuple[Product, Product, Product, Product]) -
 
 
 def test_product_str(products: Tuple[Product, Product, Product, Product]) -> None:
+    """
+    Проверяет реализацию метода __str__ для класса Product.
+    Строковое представление должно включать имя, цену и количество.
+    """
     p1, *_ = products
     assert str(p1) == "Samsung Galaxy S23 Ultra (180000.0 руб., 5 шт)"
 
 
 def test_product_repr(products: Tuple[Product, Product, Product, Product]) -> None:
+    """
+    Проверяет реализацию метода __repr__ для класса Product.
+    Ожидается формат: '<название> (<цена> руб., <количество> шт)'.
+    """
     _, p2, *_ = products
     assert repr(p2) == "Iphone 15 (210000.0 руб., 8 шт)"

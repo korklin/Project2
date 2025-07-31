@@ -1,5 +1,6 @@
 from __future__ import annotations
-from src.class_product import Product, Smartphone, LawnGrass
+
+from src.class_product import LawnGrass, Product, Smartphone
 
 
 class Category:
@@ -45,14 +46,12 @@ class Category:
         else:
             raise TypeError("Можно добавлять только объекты класса Смартфон.")
 
-
     def add_product_lawngrass(self, product: LawnGrass) -> None:
         if isinstance(product, LawnGrass):
             self.__products.append(product)
             Category.product_count += 1
         else:
             raise TypeError("Можно добавлять только объекты класса Газонная трава.")
-
 
     @property
     def products(self) -> list[Product]:
