@@ -2,8 +2,8 @@ from typing import Iterator, Tuple
 
 import pytest
 
-from src.class_product import Product
 from src.class_category import Category
+from src.class_product import Product
 
 
 @pytest.fixture(autouse=True)
@@ -103,7 +103,8 @@ def test_category_products_objects(
 
 def test_category_init_with_non_list_raises() -> None:
     """
-    Проверяет, что попытка создать категорию с аргументом products, не являющимся списком, вызывает исключение TypeError.
+    Проверяет, что попытка создать категорию с аргументом products, не являющимся списком,
+    вызывает исключение TypeError.
     """
     with pytest.raises(
         TypeError, match="products должен быть списком объектов класса Product"
