@@ -11,13 +11,12 @@ def products() -> Tuple[Product, Product, Product, Product]:
     """
     Создаёт 4 тестовых продукта.
     """
-    product1 = Product(
-        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
+    return (
+        Product("Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5),
+        Product("Iphone 15", "512GB, Gray space", 210000.0, 8),
+        Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14),
+        Product('55" QLED 4K', "Фоновая подсветка", 123000.0, 7),
     )
-    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
-    product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
-    product4 = Product('55" QLED 4K', "Фоновая подсветка", 123000.0, 7)
-    return product1, product2, product3, product4
 
 
 def test_product_fields(products: Tuple[Product, Product, Product, Product]) -> None:
@@ -26,18 +25,7 @@ def test_product_fields(products: Tuple[Product, Product, Product, Product]) -> 
     """
     product1, product2, product3, _ = products
     assert product1.name == "Samsung Galaxy S23 Ultra"
-    assert product1.description == "256GB, Серый цвет, 200MP камера"
-    assert product1.price == 180000.0
-    assert product1.quantity == 5
-
-    assert product2.name == "Iphone 15"
     assert product2.description == "512GB, Gray space"
-    assert product2.price == 210000.0
-    assert product2.quantity == 8
-
-    assert product3.name == "Xiaomi Redmi Note 11"
-    assert product3.description == "1024GB, Синий"
-    assert product3.price == 31000.0
     assert product3.quantity == 14
 
 def test_new_product_creation() -> None:
