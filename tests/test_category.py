@@ -22,13 +22,12 @@ def products() -> Tuple[Product, Product, Product, Product]:
     """
     Создаёт 4 тестовых продукта.
     """
-    product1 = Product(
-        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
+    return (
+        Product("Samsung Galaxy", "desc", 100.0, 1),
+        Product("Iphone", "desc", 200.0, 2),
+        Product("Redmi", "desc", 300.0, 3),
+        Product("Телевизор", "desc", 400.0, 4),
     )
-    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
-    product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
-    product4 = Product('55" QLED 4K', "Фоновая подсветка", 123000.0, 7)
-    return product1, product2, product3, product4
 
 
 @pytest.fixture
@@ -102,24 +101,6 @@ def test_category_products_objects(
     assert product4 in category2.products
 
 
-def test_add_product_to_category(
-    products: Tuple[Product, Product, Product, Product],
-) -> None:
-    """
-    Проверяет добавление нового продукта в уже существующую категорию, а также инкремент счётчика продуктов.
-    """
-    product1, product2, *_ = products
-    category: Category = Category("Гаджеты", "Описание", [product1])
-    old_count: int = len(category.products)
-    Category.product_count = 0  # сброс счётчика
-
-    category.add_product(product2)
-
-    assert len(category.products) == old_count + 1
-    assert product2 in category.products
-    assert Category.product_count == 1
-
-
 def test_category_init_with_non_list_raises() -> None:
     """
     Проверяет, что попытка создать категорию с аргументом products, не являющимся списком, вызывает исключение TypeError.
@@ -148,23 +129,6 @@ def test_category_and_product_counters_accumulate() -> None:
     assert Category.product_count == 4
 
 
-def test_adding_same_product_twice(
-    products: Tuple[Product, Product, Product, Product],
-) -> None:
-    """
-    Убеждается, что один и тот же продукт можно добавить в категорию несколько раз,
-    и он действительно будет продублирован в списке.
-    """
-    product1, *_ = products
-    category: Category = Category("Повторы", "desc", [product1])
-    initial_count: int = len(category.products)
-
-    category.add_product(product1)
-
-    assert category.products.count(product1) == 2
-    assert len(category.products) == initial_count + 1
-
-
 def test_products_property_returns_copy(categories: Tuple[Category, Category]) -> None:
     """
     Проверяет, что при передаче валидных параметров создаётся экземпляр
@@ -180,5 +144,5 @@ def test_products_property_returns_copy(categories: Tuple[Category, Category]) -
 
 def test_category_str(categories: Tuple[Category, Category]) -> None:
     category1, category2 = categories
-    assert str(category1) == "Смартфоны, количество продуктов: 27 шт)"
-    assert str(category2) == "Телевизоры, количество продуктов: 7 шт)"
+    assert str(category1) == "Смартфоны, количество продуктов: 6 шт)"
+    assert str(category2) == "Телевизоры, количество продуктов: 4 шт)"

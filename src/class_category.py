@@ -1,5 +1,5 @@
-
-from src.class_product import Product, product1, product2, product3
+from __future__ import annotations
+from src.class_product import Product, Smartphone, LawnGrass
 
 
 class Category:
@@ -11,6 +11,8 @@ class Category:
     product_count = 0
 
     def __init__(self, name: str, description: str, products: list) -> None:
+        self.quantity = None
+        self.price = None
         self.name = name
         self.description = description
         self.__products = []
@@ -36,6 +38,21 @@ class Category:
         else:
             raise TypeError("Можно добавлять только объекты класса Product.")
 
+    def add_product_smartphone(self, product: Smartphone) -> None:
+        if isinstance(product, Smartphone):
+            self.__products.append(product)
+            Category.product_count += 1
+        else:
+            raise TypeError("Можно добавлять только объекты класса Смартфон.")
+
+
+    def add_product_lawngrass(self, product: LawnGrass) -> None:
+        if isinstance(product, LawnGrass):
+            self.__products.append(product)
+            Category.product_count += 1
+        else:
+            raise TypeError("Можно добавлять только объекты класса Газонная трава.")
+
 
     @property
     def products(self) -> list[Product]:
@@ -45,19 +62,3 @@ class Category:
     def __str__(self) -> str:
         total_quantity = sum(product.quantity for product in self.__products)
         return f"{self.name}, количество продуктов: {total_quantity} шт)"
-
-
-if __name__ == "__main__":
-    category1 = Category(
-        "Смартфоны",
-        "Смартфоны, как средство не только коммуникации, но и получения дополнительных функций для удобства жизни",
-        [product1, product2, product3]
-    )
-
-    print(str(category1))
-
-    print(category1.products)
-
-    print(product1 + product2)
-    print(product1 + product3)
-    print(product2 + product3)
