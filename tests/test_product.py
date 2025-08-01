@@ -126,3 +126,24 @@ def test_product_repr(products: Tuple[Product, Product, Product, Product]) -> No
     """
     _, p2, *_ = products
     assert repr(p2) == "Iphone 15 (210000.0 руб., 8 шт)"
+
+
+def test_product_creation_logs_output(capfd: CaptureFixture[str]) -> None:
+    """
+    Проверка, что логгирование действительно происходит.
+    """
+    product = Product("Тест", "Описание", 1000, 5)
+    out, err = capfd.readouterr()
+    assert "Создан объект класса Product" in out
+    assert "args=('Тест', 'Описание', 1000, 5)" in out
+
+
+def test_product_attributes() -> None:
+    """
+    Проверка, что миксин не ломает поведение Product.
+    """
+    product = Product("Тест", "Описание", 1000, 5)
+    assert product.name == "Тест"
+    assert product.description == "Описание"
+    assert product.price == 1000
+    assert product.quantity == 5

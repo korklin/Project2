@@ -1,9 +1,14 @@
 from __future__ import annotations
 
 from typing import Self
+from abc import ABC, abstractmethod
 
+class BaseProduct:
+    @abstractmethod
+    def __init__(self):
+        pass
 
-class Product:
+class Product(BaseProduct):
     name: str
     description: str
     __price: float
@@ -16,6 +21,7 @@ class Product:
         self.description = description
         self.__price = price
         self.quantity = quantity
+        super().__init__()
 
     @property
     def price(self) -> float:
@@ -82,3 +88,10 @@ class LawnGrass(Product):
         self.country = country
         self.germination_period = germination_period
         self.color = color
+
+
+class MixinInfo:
+    def __init__(self, *args, **kwargs):
+        class_name = self.__class__.__name__
+        print(f"Создан объект класса {class_name} с аргументами: args={args}, kwargs={kwargs}")
+        super().__init__(*args, **kwargs)

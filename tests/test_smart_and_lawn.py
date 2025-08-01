@@ -1,6 +1,7 @@
 from typing import Tuple
 
 import pytest
+from _pytest.capture import CaptureFixture, capfd
 
 from src.class_category import Category
 from src.class_product import LawnGrass, Smartphone
@@ -75,3 +76,12 @@ def test_add_invalid_type_to_specific_method(
     category = Category("Смартфоны", "desc", [s1])
     with pytest.raises(TypeError):
         category.add_product_smartphone(g1)  # type: ignore[arg-type] # Нельзя добавлять траву как смартфон
+
+
+def test_smartphone_creation_logs_output(capfd: CaptureFixture[str]) -> None:
+    """
+    Проверка, что логгирование работает и для подклассов.
+    """
+    smartphone = Smartphone("iPhone", "desc", 200.0, 2, 95.0, "15", 256, "silver")
+    out, _ = capfd.readouterr()
+    assert "Создан объект класса Smartphone" in out
