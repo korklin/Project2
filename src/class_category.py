@@ -1,21 +1,6 @@
 from __future__ import annotations
 
-from typing import List
-
 from src.class_product import LawnGrass, Product, Smartphone
-
-
-def avg_price(products: List[Product]) -> float:
-    total_cost = 0.0
-    total_quantity = 0
-
-    for product in products:
-        total_cost += product.price * product.quantity
-        total_quantity += product.quantity
-    try:
-        return total_cost / total_quantity
-    except ZeroDivisionError:
-        raise ValueError("Невозможно посчитать среднюю цену: количество товаров равно 0")
 
 
 class Category:
@@ -76,3 +61,17 @@ class Category:
     def __str__(self) -> str:
         total_quantity = sum(product.quantity for product in self.__products)
         return f"{self.name}, количество продуктов: {total_quantity} шт)"
+
+    def middle_price(self) -> float:
+        total_cost = 0.0
+        total_quantity = 0
+
+        for product in self.__products:
+            total_cost += product.price * product.quantity
+            total_quantity += product.quantity
+        try:
+            return total_cost / total_quantity
+        except ZeroDivisionError:
+            raise ValueError(
+                "Невозможно посчитать среднюю цену: количество товаров равно 0"
+            )

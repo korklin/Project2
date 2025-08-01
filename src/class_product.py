@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from typing import Self, Any
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+from typing import Any, Self
+
 
 class BaseProduct:
     @abstractmethod
@@ -12,7 +13,9 @@ class BaseProduct:
 class MixinInfo:
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         class_name = self.__class__.__name__
-        print(f"Создан объект класса {class_name} с аргументами: args={args}, kwargs={kwargs}")
+        print(
+            f"Создан объект класса {class_name} с аргументами: args={args}, kwargs={kwargs}"
+        )
         super().__init__(*args, **kwargs)
 
 
@@ -26,14 +29,12 @@ class Product(MixinInfo, BaseProduct):
         self, name: str, description: str, price: float, quantity: int
     ) -> None:
         if quantity == 0:
-            raise ValueError(
-                f"Товар с нулевым количеством не может быть добавлен")
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
         self.name = name
         self.description = description
         self.__price = price
         self.quantity = quantity
         super().__init__()
-
 
     @property
     def price(self) -> float:
@@ -100,4 +101,3 @@ class LawnGrass(Product):
         self.country = country
         self.germination_period = germination_period
         self.color = color
-
