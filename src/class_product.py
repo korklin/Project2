@@ -1,14 +1,22 @@
 from __future__ import annotations
 
-from typing import Self
+from typing import Self, Any
 from abc import ABC, abstractmethod
 
 class BaseProduct:
     @abstractmethod
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
-class Product(BaseProduct):
+
+class MixinInfo:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        class_name = self.__class__.__name__
+        print(f"Создан объект класса {class_name} с аргументами: args={args}, kwargs={kwargs}")
+        super().__init__(*args, **kwargs)
+
+
+class Product(MixinInfo, BaseProduct):
     name: str
     description: str
     __price: float
@@ -89,9 +97,3 @@ class LawnGrass(Product):
         self.germination_period = germination_period
         self.color = color
 
-
-class MixinInfo:
-    def __init__(self, *args, **kwargs):
-        class_name = self.__class__.__name__
-        print(f"Создан объект класса {class_name} с аргументами: args={args}, kwargs={kwargs}")
-        super().__init__(*args, **kwargs)
