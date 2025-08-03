@@ -132,7 +132,7 @@ celerybeat.pid
 __pycache__/
 *.рус
 
-.venv
+.venv/
 env/
 venv/
 ENV/
