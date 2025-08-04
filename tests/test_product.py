@@ -140,7 +140,6 @@ def test_product_creation_logs_output(capfd: CaptureFixture[str]) -> None:
     product = Product("Тест", "Описание", 1000, 5)
     out, err = capfd.readouterr()
     assert "Создан объект класса Product" in out
-    # assert "args=('Тест', 'Описание', 1000, 5)" in out
 
 
 def test_product_attributes() -> None:
@@ -152,3 +151,10 @@ def test_product_attributes() -> None:
     assert product.description == "Описание"
     assert product.price == 1000
     assert product.quantity == 5
+
+
+def test_product_creation_with_zero_quantity_raises() -> None:
+    with pytest.raises(
+        ValueError, match="Товар с нулевым количеством не может быть добавлен"
+    ):
+        Product("Тест", "Описание", 1000.0, 0)

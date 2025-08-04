@@ -3,7 +3,7 @@ from typing import Iterator, Tuple
 import pytest
 
 from src.class_category import Category
-from src.class_product import Product
+from src.class_product import Product, Smartphone
 
 
 @pytest.fixture(autouse=True)
@@ -147,3 +147,52 @@ def test_category_str(categories: Tuple[Category, Category]) -> None:
     category1, category2 = categories
     assert str(category1) == "Смартфоны, количество продуктов: 6 шт)"
     assert str(category2) == "Телевизоры, количество продуктов: 4 шт)"
+
+
+def test_add_non_product_raises_type_error() -> None:
+    category = Category("Техника", "Описание", [])
+
+    with pytest.raises(
+        TypeError, match="Можно добавлять только объекты класса Product."
+    ):
+        category.add_product("не продукт")  # type: ignore[arg-type]
+
+
+def test_add_non_smartphone_raises_type_error() -> None:
+    category = Category("Смартфоны", "Описание", [])
+
+    with pytest.raises(
+        TypeError, match="Можно добавлять только объекты класса Смартфон."
+    ):
+        category.add_product_smartphone(Product("Наушники", "desc", 1000.0, 1))  # type: ignore[arg-type]
+
+
+def test_add_non_lawngrass_raises_type_error() -> None:
+    category = Category("Газон", "Описание", [])
+
+    with pytest.raises(
+        TypeError, match="Можно добавлять только объекты класса Газонная трава."
+    ):
+        category.add_product_lawngrass(Smartphone("iPhone", "desc",  # type: ignore[arg-type]
+                                                  200.0,                      # type: ignore[arg-type]
+                                                  2, 95.0,          # type: ignore[arg-type]
+                                                  "15", 256,          # type: ignore[arg-type]
+                                                  "silver"))                   # type: ignore[arg-type]
+
+
+def test_init_with_invalid_product_in_list_raises_type_error() -> None:
+    invalid_product_list = [
+        Product("Товар", "desc", 1000.0, 1),
+        "строка вместо продукта",
+    ]
+
+    with pytest.raises(
+        TypeError, match="Список должен содержать только объекты класса Product."
+    ):
+        Category("Ошибка", "Описание", invalid_product_list)  # type: ignore[list-item]
+
+
+def test_middle_price_raises_value_error_on_zero_quantity() -> None:
+    category = Category("Пусто", "Нет товаров", [])
+    with pytest.raises(ValueError, match="Невозможно посчитать среднюю цену"):
+        category.middle_price()

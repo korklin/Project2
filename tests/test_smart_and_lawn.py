@@ -70,7 +70,8 @@ def test_add_invalid_type_to_specific_method(
     new_products: Tuple[Smartphone, Smartphone, Smartphone, LawnGrass, LawnGrass],
 ) -> None:
     """
-    Проверяет, что метод add_product_smartphone вызывает TypeError при попытке добавить объект другого типа (LawnGrass).
+    Проверяет, что метод add_product_smartphone вызывает TypeError при попытке добавить
+    объект другого типа (LawnGrass).
     """
     s1, _, _, g1, _ = new_products
     category = Category("Смартфоны", "desc", [s1])
@@ -82,6 +83,7 @@ def test_smartphone_creation_logs_output(capfd: CaptureFixture[str]) -> None:
     """
     Проверка, что логгирование работает и для подклассов.
     """
-    smartphone = Smartphone("iPhone", "desc", 200.0, 2, 95.0, "15", 256, "silver")
+    smartphone = Smartphone("iPhone", "desc", 200.0, 2, 95.0, "15",
+                            256, "silver")
     out, _ = capfd.readouterr()
     assert "Создан объект класса Smartphone" in out
